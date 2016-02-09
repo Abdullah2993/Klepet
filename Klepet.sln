@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klepet", "Klepet\Klepet.csproj", "{77065502-2445-4C05-812C-38FC52C132F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klepet.Tests", "Klepet.Tests\Klepet.Tests.csproj", "{38E73497-936D-4F76-BEAA-E82C02CFB83D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77065502-2445-4C05-812C-38FC52C132F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77065502-2445-4C05-812C-38FC52C132F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77065502-2445-4C05-812C-38FC52C132F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77065502-2445-4C05-812C-38FC52C132F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38E73497-936D-4F76-BEAA-E82C02CFB83D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38E73497-936D-4F76-BEAA-E82C02CFB83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38E73497-936D-4F76-BEAA-E82C02CFB83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38E73497-936D-4F76-BEAA-E82C02CFB83D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,11 @@
+﻿@model Klepet.Models.Clients
+
+@foreach (var id in Model.Ids)
+{
+    <div id="@id" class="media conversation">
+        <div class="media-body">
+            <h5 class="media-heading">@id</h5>
+            <small>Hello</small>
+        </div>
+    </div>
+}
