@@ -13,29 +13,29 @@ namespace Klepet.Hubs
         {
             if (Redis.IsConnected)
             {
-                Redis.GetSubscriber().SubscribeAsync(ConnectionChannel, GetConnectionUpdates);
-                Redis.GetSubscriber().SubscribeAsync(ChatChannel, GetMessageUpdates);
+                Redis.GetSubscriber().Subscribe(ConnectionChannel, GetConnectionUpdates);
+                Redis.GetSubscriber().Subscribe(ChatChannel, GetMessageUpdates);
             }
         }
 
         [HubMethodName("sendMessage")]
-        public void SendMessage(string message)
+        public async Task SendMessage(string message)
         {
             if(string.IsNullOrWhiteSpace(message))
                 return;
 
             if (Redis.IsConnected)
-                    Redis.GetSubscriber().PublishAsync(ChatChannel, $"{InstanceId}|{Context.ConnectionId}|{message}");
+                    await Redis.GetSubscriber().PublishAsync(ChatChannel, $"{InstanceId}|{Context.ConnectionId}|{message}");
 
             Clients.AllExcept(Context.ConnectionId).receiveMessage(Context.ConnectionId, message);
         }
 
-        public override Task OnConnected()
+        public override async Task OnConnected()
         {
             if (Redis.IsConnected)
             {
-                Redis.GetDatabase().SetAddAsync(ConnectionList, Context.ConnectionId);
-                Redis.GetSubscriber().PublishAsync("connections", $"1|{InstanceId}|{Context.ConnectionId}");
+                await Redis.GetDatabase().SetAddAsync(ConnectionList, Context.ConnectionId);
+                await Redis.GetSubscriber().PublishAsync("connections", $"1|{InstanceId}|{Context.ConnectionId}");
             }
             else
             {
@@ -45,15 +45,15 @@ namespace Klepet.Hubs
 
             Clients.All.clientConnected(Context.ConnectionId);
 
-            return base.OnConnected();
+            await base.OnConnected();
         }
 
-        public override Task OnDisconnected(bool stopCalled)
+        public override async Task OnDisconnected(bool stopCalled)
         {
             if (Redis.IsConnected)
             {
-                Redis.GetDatabase().SetRemoveAsync(ConnectionList, Context.ConnectionId);
-                Redis.GetSubscriber().PublishAsync("connections", $"0|{InstanceId}|{Context.ConnectionId}");
+                await Redis.GetDatabase().SetRemoveAsync(ConnectionList, Context.ConnectionId);
+                await Redis.GetSubscriber().PublishAsync("connections", $"0|{InstanceId}|{Context.ConnectionId}");
             }
             else
             {
@@ -66,7 +66,7 @@ namespace Klepet.Hubs
 
             GlobalHost.ConnectionManager.GetHubContext<ChatHub>().Clients.All.clientDisconnected(Context.ConnectionId);
 
-            return base.OnDisconnected(stopCalled);
+            await base.OnDisconnected(stopCalled);
         }
 
         private static void GetMessageUpdates(RedisChannel channel, RedisValue value)
@@ -81,6 +81,7 @@ namespace Klepet.Hubs
         {
             var vals = value.ToString().Split('|');
             if (vals.Length != 3 || vals[1] == InstanceId) return;
+
             switch (vals[0])
             {
                 case "1":

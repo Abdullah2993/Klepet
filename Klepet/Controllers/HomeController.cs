@@ -9,39 +9,19 @@ namespace Klepet.Controllers
 {
     public class HomeController : Controller
     {
-        public ViewResult Index()
-        {           
-            return View();
-        }
-
-        /*public async Task<PartialViewResult> Clients()
+        public async Task<ViewResult> Index()
         {
             var clients = new Clients();
             if (Redis.IsConnected)
             {
-                var ids = await Redis.GetDatabase().SetMembersAsync(ConnectionList);
+                var ids =await Redis.GetDatabase().SetMembersAsync(ConnectionList);
                 clients.Ids = ids.ToStringArray();
             }
             else
             {
                 clients.Ids = ClientList.Keys.ToArray();
             }
-            return PartialView(clients);
-        } */
-
-        public PartialViewResult Clients()
-        {
-            var clients = new Clients();
-            if (Redis.IsConnected)
-            {
-                var ids =  Redis.GetDatabase().SetMembers(ConnectionList);
-                clients.Ids = ids.ToStringArray();
-            }
-            else
-            {
-                clients.Ids = ClientList.Keys.ToArray();
-            }
-            return PartialView(clients);
+            return View(clients);
         }
     }
 }
