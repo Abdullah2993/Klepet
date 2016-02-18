@@ -36,4 +36,8 @@ $("#msgIn").keypress(function (e) {
     }
 });
 
+window.onbeforeunload = function (e) {
+    $.connection.hub.stop();
+};
+
 $.connection.hub.start();

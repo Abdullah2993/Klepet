@@ -35,7 +35,7 @@ namespace Klepet.Hubs
             if (Redis.IsConnected)
             {
                 await Redis.GetDatabase().SetAddAsync(ConnectionList, Context.ConnectionId);
-                await Redis.GetSubscriber().PublishAsync("connections", $"1|{InstanceId}|{Context.ConnectionId}");
+                await Redis.GetSubscriber().PublishAsync(ConnectionChannel, $"1|{InstanceId}|{Context.ConnectionId}");
             }
             else
             {
@@ -53,7 +53,7 @@ namespace Klepet.Hubs
             if (Redis.IsConnected)
             {
                 await Redis.GetDatabase().SetRemoveAsync(ConnectionList, Context.ConnectionId);
-                await Redis.GetSubscriber().PublishAsync("connections", $"0|{InstanceId}|{Context.ConnectionId}");
+                await Redis.GetSubscriber().PublishAsync(ConnectionChannel, $"0|{InstanceId}|{Context.ConnectionId}");
             }
             else
             {
@@ -64,7 +64,7 @@ namespace Klepet.Hubs
                 }
             }
 
-            GlobalHost.ConnectionManager.GetHubContext<ChatHub>().Clients.All.clientDisconnected(Context.ConnectionId);
+            Clients.Others.clientDisconnected(Context.ConnectionId);
 
             await base.OnDisconnected(stopCalled);
         }
@@ -82,14 +82,13 @@ namespace Klepet.Hubs
             var vals = value.ToString().Split('|');
             if (vals.Length != 3 || vals[1] == InstanceId) return;
 
-            switch (vals[0])
+            if (vals[0] == "1")
             {
-                case "1":
-                    GlobalHost.ConnectionManager.GetHubContext<ChatHub>().Clients.All.clientConnected(vals[2]);
-                    break;
-                case "0":
-                    GlobalHost.ConnectionManager.GetHubContext<ChatHub>().Clients.All.clientDisconnected(vals[2]);
-                    break;
+                GlobalHost.ConnectionManager.GetHubContext<ChatHub>().Clients.All.clientConnected(vals[2]);
+            }
+            else if (vals[0] == "0")
+            {
+                GlobalHost.ConnectionManager.GetHubContext<ChatHub>().Clients.All.clientDisconnected(vals[2]);
             }
         }
     }
